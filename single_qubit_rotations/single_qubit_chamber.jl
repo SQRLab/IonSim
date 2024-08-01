@@ -46,7 +46,6 @@ function construct_single_qubit_chamber(
     else
         I = intensity
     end
-    I = intensity_from_pitime(laser, pi_time, CALCIUM40, ("S", "D"), chamber);
     intensity!(laser, I)
 
     
