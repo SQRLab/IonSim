@@ -9,12 +9,16 @@ function construct_single_qubit_chamber(
         trap_frequency,
 
         # Laser parameters
-        intensity,
-        wavelength,
-        pi_time,
+        pi_time;
 
         # Trap parameters
-        B_strength
+
+        # Default laser parameters
+        intensity = Nothing,
+        wavelength = Nothing,
+
+        # Default trap parameters
+        B_strength = Nothing
     )
     
     chain = LinearChain(
@@ -24,13 +28,28 @@ function construct_single_qubit_chamber(
     )
 
     laser = Laser(Δ=0, ϵ = (x̂ - ẑ)/√2, k = (x̂ + ẑ)/√2, ϕ = 0)
-    chamber = Chamber(iontrap=chain, B=4e-4, Bhat=ẑ, δB=0, lasers=[laser]);
 
-    λ = transitionwavelength(CALCIUM40, ("S", "D"), chamber)
+    if B_strength == Nothing
+        B_strength = 4e-4
+    end
+    chamber = Chamber(iontrap=chain, B=B_strength, Bhat=ẑ, δB=0, lasers=[laser]);
+    
+    if wavelength == Nothing
+        λ = transitionwavelength(CALCIUM40, ("S", "D"), chamber)
+    else
+        λ = wavelength
+    end
     wavelength!(laser, λ)
 
+    if intensity == Nothing
+        I = intensity_from_pitime(laser, pi_time, CALCIUM40, ("S", "D"), chamber)
+    else
+        I = intensity
+    end
     I = intensity_from_pitime(laser, pi_time, CALCIUM40, ("S", "D"), chamber);
     intensity!(laser, I)
+
+    
     return chamber
 
 end
