@@ -2,10 +2,10 @@ module MolmerSorensen
 
 using QuantumOptics
 using IonSim
-
 function construct_two_ion_chamber(
     I, # Intensity, W/m^2
     ν, # Trap-frequency, Hz
+    ν_target, # Target trap-frequency for computing sideband detuning, Hz
     f_cl, # Center-line frequency, Hz
     ϕ, # Relative phase between red and blue sidebands, radian
     ms_π2_time # Time for an MS(π/2) gate, determines the detuning, s
@@ -36,7 +36,7 @@ function construct_two_ion_chamber(
     λ_cl = C0/f_cl
 
     # Compute the sideband detuning 
-    δ = ν + 1/ms_π2_time - ac_correction
+    δ = ν_target + 1/ms_π2_time - ac_correction
     Δ_blue = δ
     Δ_red = -δ
 
@@ -92,10 +92,10 @@ function prep_for_single_qubit_gate(chamber, ion_idx, π_time)
     # Update the laser parameters
     detuning!(laser_update, 0)
 
-    λ_tr = transitionwavelength(Ca40([("S1/2", -1/2, "S"), ("D5/2", -1/2, "D")]), ("S", "D"), chamber)
+    λ_tr = transitionwavelength(CALCIUM40, ("S", "D"), chamber)
     wavelength!(laser_update, λ_tr)
 
-    intensity!(laser_update, intensity_from_pitime(laser_update, π_time, Ca40([("S1/2", -1/2, "S"), ("D5/2", -1/2, "D")]), ("S", "D"), chamber))
+    intensity!(laser_update, intensity_from_pitime(laser_update, π_time, CALCIUM40, ("S", "D"), chamber))
     intensity!(laser_ignore, 0)
 
     polarization!(laser_update, x̂)
@@ -221,6 +221,5 @@ function RZ(chamber, ion_idx, θ, ψ0, π_time; timescale=1e-6, lamb_dicke_order
     return tout, ψt
 
 end
-
 
 end
