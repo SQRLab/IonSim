@@ -1,17 +1,17 @@
-module MolmerSorensen
+module TwoIonChamber
 
 using QuantumOptics
 using IonSim
-function construct_two_ion_chamber(
-    I, # Intensity, W/m^2
-    ν, # Trap-frequency, Hz
-    ν_target, # Target trap-frequency for computing sideband detuning, Hz
-    f_cl, # Center-line frequency, Hz
-    ϕ, # Relative phase between red and blue sidebands, radian
-    ms_π2_time # Time for an MS(π/2) gate, determines the detuning, s
-    ;
-    B = 6e-4, # Strength of magnetic field, T
-    ac_correction = 0 # AC Stark shift correction, Hz
+
+function construct_two_ion_chamber(;
+    I = Nothing, # Intensity, W/m^2
+    ν = Nothing, # Trap-frequency, Hz
+    ν_target = Nothing, # Target trap-frequency for computing sideband detuning, Hz
+    f_cl = Nothing, # Center-line frequency, Hz
+    ϕ = Nothing, # Relative phase between red and blue sidebands, radian
+    ms_π2_time = Nothing, # Time for an MS(π/2) gate, determines the detuning, s
+    B = Nothing, # Strength of magnetic field, T
+    ac_correction = Nothing # AC Stark shift correction, Hz
 )
     """
     YOU MUST UPDATE ALL THE LASER PARAMETERS IN ORDER TO PERFORM SINGLE-QUBIT GATES.
@@ -63,11 +63,11 @@ function MS(chamber, θ, ψ0, ms_π2_time; timescale=1e-6, lamb_dicke_order=1, r
     return tout, sol
 end
 
-function prep_for_single_qubit_gate(chamber, ion_idx, π_time)
+function prep_for_single_qubit_gate(chamber, ion_idx, π_time; I_new = Nothing, λ_new = Nothing)
     """
     This function accepts a two-ion chamber that is already primed to perform an MS gate. 
 
-    It updates the parameters of the lasers to perform the RX gate on the ion specified by `ion_idx`. 
+    It updates the parameters of the lasers to perform the RX gate on the ion specified by `ion_idx`. If I_new and λ_new aren't passed, then it computes the intensity and wavelength for the π_time specified.
 
     It also returns the original laser parameters so that they can be reset after the single-qubit gate is performed.
 
@@ -77,7 +77,7 @@ function prep_for_single_qubit_gate(chamber, ion_idx, π_time)
     laser_ignore = chamber.lasers[laser_update_idx%2 + 1]
 
     # Collect the original laser parameters
-    og_params = Dict(
+    og_params = Dict{String, Any}(
         "updated_laser_idx" => laser_update_idx,
         "λ" => laser_update.λ,
         "I_updated" => laser_update.I,
@@ -87,15 +87,21 @@ function prep_for_single_qubit_gate(chamber, ion_idx, π_time)
         "ϵ" => laser_update.ϵ,
         "k" => laser_update.k,
         "pointing" => laser_update.pointing
-    ),
+    )
         
     # Update the laser parameters
     detuning!(laser_update, 0)
 
-    λ_tr = transitionwavelength(CALCIUM40, ("S", "D"), chamber)
-    wavelength!(laser_update, λ_tr)
+    if λ_new == Nothing
+        λ_new = transitionwavelength(ion_idx, ("S", "D"), chamber)
+    end
+    wavelength!(laser_update, λ_new)
 
-    intensity!(laser_update, intensity_from_pitime(laser_update, π_time, CALCIUM40, ("S", "D"), chamber))
+    
+    if I_new == Nothing
+        I_new = intensity_from_pitime(laser_update, π_time, chamber.iontrap.ions[ion_idx], ("S", "D"), chamber)    
+    end
+    intensity!(laser_update, I_new)
     intensity!(laser_ignore, 0)
 
     polarization!(laser_update, x̂)
@@ -166,7 +172,7 @@ function RY(chamber, ion_idx, θ, ψ0, π_time; timescale=1e-6, lamb_dicke_order
     # Set the necessary phase for the RY gate
     laser_update_idx = ion_idx
     laser_update = chamber.lasers[laser_update_idx]
-    phase!(laser_update, π/2)
+    phase!(laser_update, -π/2)
 
     # Perform the RX gate
     t_final = (θ/π)*π_time
@@ -196,14 +202,15 @@ function RZ(chamber, ion_idx, θ, ψ0, π_time; timescale=1e-6, lamb_dicke_order
     t_final_1 = (θ1/π)*π_time
     t_range_1 = 0:t_final_1*1e-3:t_final_1
     h = hamiltonian(chamber, timescale=timescale, lamb_dicke_order=lamb_dicke_order, rwa_cutoff=rwa_cutoff)
-    tout_1, ψ_1 = timeevolution.schroedinger_dynamic(t_range_1, ψ0, h)
+    tout_1, ψ_1 = timeevolution.schroedinger_dynamic(t_range_1/timescale, ψ0, h)
 
     # RY(θ)
-    phase!(laser_update, π/2)
+    phase!(laser_update, -π/2)
     t_final_2 = (θ/π)*π_time
     t_range_2 = 0:t_final_2*1e-3:t_final_2
     h = hamiltonian(chamber, timescale=timescale, lamb_dicke_order=lamb_dicke_order, rwa_cutoff=rwa_cutoff)
-    tout_2, ψ_2 = timeevolution.schroedinger_dynamic(t_range_2, ψ_1[end], h)
+    tout_2, ψ_2 = timeevolution.schroedinger_dynamic(t_range_2/timescale, ψ_1[end], h)
+    tout_2 .+= tout_1[end]
 
     # RX(π/2)
     phase!(laser_update, 0)
@@ -211,13 +218,14 @@ function RZ(chamber, ion_idx, θ, ψ0, π_time; timescale=1e-6, lamb_dicke_order
     t_final_3 = (θ3/π)*π_time
     t_range_3 = 0:t_final_3*1e-3:t_final_3
     h = hamiltonian(chamber, timescale=timescale, lamb_dicke_order=lamb_dicke_order, rwa_cutoff=rwa_cutoff)
-    tout_3, ψ_3 = timeevolution.schroedinger_dynamic(t_range_3, ψ_2[end], h)
+    tout_3, ψ_3 = timeevolution.schroedinger_dynamic(t_range_3/timescale, ψ_2[end], h)
+    tout_3 .+= tout_2[end]
 
     # Reset the laser parameters
     restore_og_params(chamber, og_params)
 
     tout = vcat(tout_1, tout_2, tout_3)
-    ψt = vcat(ψt_1, ψt_2, ψt_3)
+    ψt = vcat(ψ_1, ψ_2, ψ_3)
     return tout, ψt
 
 end
