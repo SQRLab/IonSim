@@ -151,8 +151,8 @@ fidelities_good_MS, fidelities_el_good_MS, entropies_good_MS = get_MS_noise(I_di
                                             n_shots=N_SHOTS)
 
 writedlm("noise_sim_out/fidelities_good_MS_n$N_SHOTS.csv",  fidelities_good_MS, ',')
-writedlm("fidelities_el_good_MS_n$N_SHOTS.csv",  fidelities_el_good_MS, ',')
-writedlm("entropies_good_MS_n$N_SHOTS.csv",  entropies_good_MS, ',')
+writedlm("noise_sim_out/fidelities_el_good_MS_n$N_SHOTS.csv",  fidelities_el_good_MS, ',')
+writedlm("noise_sim_out/entropies_good_MS_n$N_SHOTS.csv",  entropies_good_MS, ',')
 println("Min fidelity = $(round(minimum(fidelities_good_MS); digits=8))")
 println("Mean fidelity = $(round(mean(fidelities_good_MS); digits=8))")
 println("Max fidelity = $(round(maximum(fidelities_good_MS); digits=8))")
@@ -173,9 +173,9 @@ fidelities_good_RX, fidelities_el_good_RX, entropies_good_RX = get_single_qubit_
                                     B = B_STRENGTH_SINGLE, 
                                     n_shots=N_SHOTS);
 
-writedlm("fidelities_good_RX_n$N_SHOTS.csv",  fidelities_good_RX, ',')
-writedlm("fidelities_el_good_RX_n$N_SHOTS.csv",  fidelities_el_good_RX, ',')
-writedlm("entropies_good_RX_n$N_SHOTS.csv",  entropies_good_RX, ',')
+writedlm("noise_sim_out/fidelities_good_RX_n$N_SHOTS.csv",  fidelities_good_RX, ',')
+writedlm("noise_sim_out/fidelities_el_good_RX_n$N_SHOTS.csv",  fidelities_el_good_RX, ',')
+writedlm("noise_sim_out/entropies_good_RX_n$N_SHOTS.csv",  entropies_good_RX, ',')
 println("Min fidelity = $(round(minimum(fidelities_good_RX); digits=8))")
 println("Mean fidelity = $(round(mean(fidelities_good_RX); digits=8))")
 println("Max fidelity = $(round(maximum(fidelities_good_RX); digits=8))")
@@ -193,9 +193,9 @@ fidelities_good_RY, fidelities_el_good_RY, entropies_good_RY = get_single_qubit_
                                     B = B_STRENGTH_SINGLE, 
                                     n_shots=N_SHOTS);
 
-writedlm("fidelities_good_RY_n$N_SHOTS.csv",  fidelities_good_RY, ',')
-writedlm("fidelities_el_good_RY_n$N_SHOTS.csv",  fidelities_el_good_RY, ',')
-writedlm("entropies_good_RY_n$N_SHOTS.csv",  entropies_good_RY, ',')
+writedlm("noise_sim_out/fidelities_good_RY_n$N_SHOTS.csv",  fidelities_good_RY, ',')
+writedlm("noise_sim_out/fidelities_el_good_RY_n$N_SHOTS.csv",  fidelities_el_good_RY, ',')
+writedlm("noise_sim_out/entropies_good_RY_n$N_SHOTS.csv",  entropies_good_RY, ',')
 println("Min fidelity = $(round(minimum(fidelities_good_RY); digits=8))")
 println("Mean fidelity = $(round(mean(fidelities_good_RY); digits=8))")
 println("Max fidelity = $(round(maximum(fidelities_good_RY); digits=8))")
@@ -224,9 +224,9 @@ fidelities_bad_MS, fidelities_el_bad_MS, entropies_bad_MS = get_MS_noise(I_dist 
                                             ν_target = μ_ν_MS, 
                                             n_shots=N_SHOTS)
 
-writedlm("fidelities_bad_MS_n$N_SHOTS.csv",  fidelities_bad_MS, ',')
-writedlm("fidelities_el_bad_MS_n$N_SHOTS.csv",  fidelities_el_bad_MS, ',')
-writedlm("entropies_bad_MS_n$N_SHOTS.csv",  entropies_bad_MS, ',')
+writedlm("noise_sim_out/fidelities_bad_MS_n$N_SHOTS.csv",  fidelities_bad_MS, ',')
+writedlm("noise_sim_out/fidelities_el_bad_MS_n$N_SHOTS.csv",  fidelities_el_bad_MS, ',')
+writedlm("noise_sim_out/entropies_bad_MS_n$N_SHOTS.csv",  entropies_bad_MS, ',')
 println("Min fidelity = $(round(minimum(fidelities_bad_MS); digits=8))")
 println("Mean fidelity = $(round(mean(fidelities_bad_MS); digits=8))")
 println("Max fidelity = $(round(maximum(fidelities_bad_MS); digits=8))")
@@ -247,9 +247,9 @@ fidelities_bad_RX, fidelities_el_bad_RX, entropies_bad_RX = get_single_qubit_gat
                                     B = B_STRENGTH_SINGLE, 
                                     n_shots=N_SHOTS);
 
-writedlm("fidelities_bad_RX_n$N_SHOTS.csv",  fidelities_bad_RX, ',')
-writedlm("fidelities_el_bad_RX_n$N_SHOTS.csv",  fidelities_el_bad_RX, ',')
-writedlm("entropies_bad_RX_n$N_SHOTS.csv",  entropies_bad_RX, ',')
+writedlm("noise_sim_out/fidelities_bad_RX_n$N_SHOTS.csv",  fidelities_bad_RX, ',')
+writedlm("noise_sim_out/fidelities_el_bad_RX_n$N_SHOTS.csv",  fidelities_el_bad_RX, ',')
+writedlm("noise_sim_out/entropies_bad_RX_n$N_SHOTS.csv",  entropies_bad_RX, ',')
 println("Min fidelity = $(round(minimum(fidelities_bad_RX); digits=8))")
 println("Mean fidelity = $(round(mean(fidelities_bad_RX); digits=8))")
 println("Max fidelity = $(round(maximum(fidelities_bad_RX); digits=8))")
@@ -267,9 +267,9 @@ fidelities_bad_RY, fidelities_el_bad_RY, entropies_bad_RY = get_single_qubit_gat
                                     B = B_STRENGTH_SINGLE, 
                                     n_shots=N_SHOTS);
 
-writedlm("fidelities_bad_RY_n$N_SHOTS.csv",  fidelities_bad_RY, ',')
-writedlm("fidelities_el_bad_RY_n$N_SHOTS.csv",  fidelities_el_bad_RY, ',')
-writedlm("entropies_bad_RY_n$N_SHOTS.csv",  entropies_bad_RY, ',')
+writedlm("noise_sim_out/fidelities_bad_RY_n$N_SHOTS.csv",  fidelities_bad_RY, ',')
+writedlm("noise_sim_out/fidelities_el_bad_RY_n$N_SHOTS.csv",  fidelities_el_bad_RY, ',')
+writedlm("noise_sim_out/entropies_bad_RY_n$N_SHOTS.csv",  entropies_bad_RY, ',')
 println("Min fidelity = $(round(minimum(fidelities_bad_RY); digits=8))")
 println("Mean fidelity = $(round(mean(fidelities_bad_RY); digits=8))")
 println("Max fidelity = $(round(maximum(fidelities_bad_RY); digits=8))")
@@ -297,9 +297,9 @@ fidelities_mid_MS, fidelities_el_mid_MS, entropies_mid_MS = get_MS_noise(I_dist 
                                             ν_target = μ_ν_MS, 
                                             n_shots=N_SHOTS)
 
-writedlm("fidelities_mid_MS_n$N_SHOTS.csv",  fidelities_mid_MS, ',')
-writedlm("fidelities_el_mid_MS_n$N_SHOTS.csv",  fidelities_el_mid_MS, ',')
-writedlm("entropies_mid_MS_n$N_SHOTS.csv",  entropies_mid_MS, ',')
+writedlm("noise_sim_out/fidelities_mid_MS_n$N_SHOTS.csv",  fidelities_mid_MS, ',')
+writedlm("noise_sim_out/fidelities_el_mid_MS_n$N_SHOTS.csv",  fidelities_el_mid_MS, ',')
+writedlm("noise_sim_out/entropies_mid_MS_n$N_SHOTS.csv",  entropies_mid_MS, ',')
 println("Min fidelity = $(round(minimum(fidelities_mid_MS); digits=8))")
 println("Mean fidelity = $(round(mean(fidelities_mid_MS); digits=8))")
 println("Max fidelity = $(round(maximum(fidelities_mid_MS); digits=8))")
@@ -320,9 +320,9 @@ fidelities_mid_RX, fidelities_el_mid_RX, entropies_mid_RX = get_single_qubit_gat
                                     B = B_STRENGTH_SINGLE, 
                                     n_shots=N_SHOTS);
 
-writedlm("fidelities_mid_RX_n$N_SHOTS.csv",  fidelities_mid_RX, ',')
-writedlm("fidelities_el_mid_RX_n$N_SHOTS.csv",  fidelities_el_mid_RX, ',')
-writedlm("entropies_mid_RX_n$N_SHOTS.csv",  entropies_mid_RX, ',')
+writedlm("noise_sim_out/fidelities_mid_RX_n$N_SHOTS.csv",  fidelities_mid_RX, ',')
+writedlm("noise_sim_out/fidelities_el_mid_RX_n$N_SHOTS.csv",  fidelities_el_mid_RX, ',')
+writedlm("noise_sim_out/entropies_mid_RX_n$N_SHOTS.csv",  entropies_mid_RX, ',')
 println("Min fidelity = $(round(minimum(fidelities_mid_RX); digits=8))")
 println("Mean fidelity = $(round(mean(fidelities_mid_RX); digits=8))")
 println("Max fidelity = $(round(maximum(fidelities_mid_RX); digits=8))")
@@ -340,9 +340,9 @@ fidelities_mid_RY, fidelities_el_mid_RY, entropies_mid_RY = get_single_qubit_gat
                                     B = B_STRENGTH_SINGLE, 
                                     n_shots=N_SHOTS);
 
-writedlm("fidelities_mid_RY_n$N_SHOTS.csv",  fidelities_mid_RY, ',')
-writedlm("fidelities_el_mid_RY_n$N_SHOTS.csv",  fidelities_el_mid_RY, ',')
-writedlm("entropies_mid_RY_n$N_SHOTS.csv",  entropies_mid_RY, ',')
+writedlm("noise_sim_out/fidelities_mid_RY_n$N_SHOTS.csv",  fidelities_mid_RY, ',')
+writedlm("noise_sim_out/fidelities_el_mid_RY_n$N_SHOTS.csv",  fidelities_el_mid_RY, ',')
+writedlm("noise_sim_out/entropies_mid_RY_n$N_SHOTS.csv",  entropies_mid_RY, ',')
 println("Min fidelity = $(round(minimum(fidelities_mid_RY); digits=8))")
 println("Mean fidelity = $(round(mean(fidelities_mid_RY); digits=8))")
 println("Max fidelity = $(round(maximum(fidelities_mid_RY); digits=8))")
